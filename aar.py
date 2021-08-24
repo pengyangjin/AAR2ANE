@@ -1,6 +1,6 @@
 # coding=utf-8
 
-# 提取AAR包中的资源 包括jar和res
+# 鎻愬彇AAR鍖呬腑鐨勮祫婧� 鍖呮嫭jar鍜宺es
 
 import os
 import sys
@@ -32,19 +32,27 @@ def export_aar(aar_dir,export_dir):
         zip_file.extractall(export_path, lib_names)
         zip_file.extractall(export_path, res_names)
 
+        zip_file.extract('classes.jar',export_path)
+
+
         data = zip_file.read('AndroidManifest.xml')
         DOMTree = xml.dom.minidom.parseString(data)
         collection = DOMTree.documentElement
         package_name = collection.getAttribute("package")
 
+        os.rename(os.path.join(export_path,'classes.jar'),os.path.join(export_dir,folder_name+".jar"))
+        packaged_dependencies.append(folder_name+".jar")
+
         jar_dir = os.path.join(export_path,'libs')
         res_dir = os.path.join(export_path,'res')
 
-        for name in os.listdir(jar_dir):
-            packaged_dependencies.append(name)
-            jar_path = os.path.join(jar_dir,name)
-            shutil.move(jar_path,os.path.join(export_dir))
-        shutil.rmtree(jar_dir)
+        if os.path.exists(jar_dir):
+            for name in os.listdir(jar_dir):
+                packaged_dependencies.append(name)
+                jar_path = os.path.join(jar_dir,name)
+
+                shutil.move(jar_path,os.path.join(export_dir))
+            shutil.rmtree(jar_dir)
 
         if os.path.exists(res_dir):
             packaged_resources.append({'packageName': package_name, 'folderName': folder_name + "-res"})
@@ -79,7 +87,7 @@ def export_aar(aar_dir,export_dir):
     f.close()
 
 
-dir = '/Users/yangjin1/Downloads/360'
-export = '/Users/yangjin1/Downloads/export'
+dir = 'C:/Users/yangjin1/Desktop/ytkk/Efun_SDK/demo/libs'
+export = 'C:/Users/yangjin1/Desktop/export'
 
 export_aar(dir,export)
