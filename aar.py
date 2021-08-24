@@ -1,7 +1,4 @@
 # coding=utf-8
-
-# 鎻愬彇AAR鍖呬腑鐨勮祫婧� 鍖呮嫭jar鍜宺es
-
 import os
 import sys
 import xml.dom.minidom
